@@ -12,7 +12,7 @@
             </ul>
         </div>
         <div style="margin-top:20px">
-            <form action="" method="post" action="{{ route('absen.store') }}">
+            <form method="post" action="/absensi/store">
     
                 <!-- CROSS Site Request Forgery Protection -->
                 @csrf

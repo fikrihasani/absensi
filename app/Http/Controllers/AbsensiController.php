@@ -5,23 +5,30 @@ namespace App\Http\Controllers;
 use App\DaftarHadir;
 use App\Kegiatan;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Redirect;
 class AbsensiController extends Controller
 {
     //
     public function index()
     {
-        $data = DaftarHadir::get();
+        $data = DaftarHadir::all();
         return view('absen.list', ['data' => $data]);
     }
 
     public function add($id_kegiatan)
     {
-        $kegiatan = Kegiatan::find($id_kegiatan);
+        $kegiatan = Kegiatan::where('unique_id',$id_kegiatan)->first();
         return view('absen.create', ['kegiatan' => $kegiatan]);
     }
 
-    public function absen(Request $request)
+    public function list($id){
+        $kegiatan = Kegiatan::find($id);
+        $daftarHadir = DaftarHadir::where('kegiatan_id',$id)->get();
+        return view('absen.list', ['daftarHadir' => $daftarHadir, 'kegiatan'=>$kegiatan]);
+    }
+
+    public function store(Request $request)
     {
         $table = new DaftarHadir();
         $table->nama = $request->nama;
@@ -46,10 +53,11 @@ class AbsensiController extends Controller
 
         $image_base64 = base64_decode($image_parts[1]);
 
-        $file = $folderPath . uniqid() . '.' . $image_type;
+        $filename = $request->kegiatan_id . $request->nama . $request->nip.'.' . $image_type;
+        $file = $folderPath . $filename;
         file_put_contents($file, $image_base64);
 
-        $table->ttd_url = $request->ttd_url;
+        $table->ttd_url = $filename;
         if ($table->save()) {
             # code...
             return "data saved";

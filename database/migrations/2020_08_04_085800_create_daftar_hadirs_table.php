@@ -22,7 +22,6 @@ class CreateDaftarHadirsTable extends Migration
             $table->string('jabatan', 144);
             $table->string('golongan', 144)->nullable();
             $table->string('no_hp', 144);
-            $table->integer('kehadiran');
             $table->boolean('rdk')->nullable();
             $table->string('no_rek')->nullable();
             $table->foreignId('kegiatan_id')->constrained('kegiatans');
