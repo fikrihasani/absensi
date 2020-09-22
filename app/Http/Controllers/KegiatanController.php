@@ -4,19 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Kegiatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use PDO;
 
 class KegiatanController extends Controller
 {
     //
     public function index()
     {
-        $data = Kegiatan::get();
-        $exist = true;
-        if (!$data) {
-            $exist = false;
+        if (Auth::check()) {
+            $data = Kegiatan::get();
+            $exist = true;
+            if (!$data) {
+                $exist = false;
+            }
+            return view('kegiatan.list', ['data' => $data, 'exist' => $exist]);
+            # code...
+        }else{
+            return redirect('/login');
         }
-        return view('kegiatan.list', ['data' => $data, 'exist' => $exist]);
     }
 
     public function add()

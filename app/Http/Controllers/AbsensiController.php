@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DaftarHadir;
 use App\Kegiatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 class AbsensiController extends Controller
@@ -12,8 +13,13 @@ class AbsensiController extends Controller
     //
     public function index()
     {
-        $data = DaftarHadir::all();
-        return view('absen.list', ['data' => $data]);
+        if (Auth::check()) {
+            $data = DaftarHadir::all();
+            return view('absen.list', ['data' => $data]);
+            # code...
+        }else{
+            return redirect('/login');
+        }
     }
 
     public function add($id_kegiatan)
@@ -23,9 +29,14 @@ class AbsensiController extends Controller
     }
 
     public function list($id){
-        $kegiatan = Kegiatan::find($id);
-        $daftarHadir = DaftarHadir::where('kegiatan_id',$id)->get();
-        return view('absen.list', ['daftarHadir' => $daftarHadir, 'kegiatan'=>$kegiatan]);
+        if (Auth::check()) {
+            # code...
+            $kegiatan = Kegiatan::find($id);
+            $daftarHadir = DaftarHadir::where('kegiatan_id',$id)->get();
+            return view('absen.list', ['daftarHadir' => $daftarHadir, 'kegiatan'=>$kegiatan]);
+        }else{
+            return redirect('login');
+        }
     }
 
     public function store(Request $request)

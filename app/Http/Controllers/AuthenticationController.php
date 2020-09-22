@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthenticationController extends Controller
 {
@@ -15,7 +16,9 @@ class AuthenticationController extends Controller
 
         if (Auth::attempt($credentials)) {
             // Authentication passed...
-            return redirect()->intended('/admin');
+            return redirect()->intended('/');
+        }else{
+            return redirect('/login');
         }
     }
 
@@ -33,10 +36,11 @@ class AuthenticationController extends Controller
 
     public function store(Request $request){
         $table = new User();
+        $table->name = $request->name;
         $table->email = $request->email;
-        $table->password = $request->password;
+        $table->password = Hash::make($request->password);
         if ($table->save()) {
-            return redirect('/login');
+            return redirect('/login')->with('email',$table->email)->with('password',$table->password);
         }
     }
 

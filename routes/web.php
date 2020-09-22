@@ -12,9 +12,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/',function(){
+    return "hello";
 });
 
 Route::get('/absensi', 'AbsensiController@index');
@@ -31,3 +30,10 @@ Route::post('/kegiatan/add', [
     'uses' => 'KegiatanController@store',
     'as' => 'kegiatan.store'
 ]);
+
+Route::get('/login','AuthenticationController@login');
+Route::get('/logout','AuthenticationController@logout');
+Route::get('/register','AuthenticationController@register');
+Route::post('/store','AuthenticationController@store');
+Route::post('/auth','AuthenticationController@authenticate');
+Route::get('/admin','AdminController@index');
